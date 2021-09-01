@@ -72,7 +72,7 @@ class gameboard():
     def print_gameboard(self):
         for i in self.gameboard:
             print(i)
-        print()
+        print('                                                   score: ', self.score)
 
     def transpose(self):
         interim_board = [[self.gameboard[j][i] for j in range(4)] for i in range(4)]
@@ -160,9 +160,10 @@ class gameboard():
         return False
 
     def game_loop(self):
-
+        
+        self.print_gameboard()
         while not self.is_game_over():
-            char = input().rstrip()[0]
+            char = input('[wasd]: ').rstrip()
 
             if char == 'w':
                 self.move_up()
@@ -172,6 +173,9 @@ class gameboard():
                 self.move_right()
             elif char == 'a':
                 self.move_left()
+            else:
+                print('enter valid move [wasd] and press enter')
+                continue
 
             self.pick_random_tile()
             self.print_gameboard()
@@ -186,7 +190,7 @@ def input_validation(input_string):
 if __name__ == "__main__":
     input_string = input("enter username: ")
     while input_validation(input_string) is True:
-        input_string = input("enter only alphanumeric: ")
+        input_string = input("enter only alphanumeric and ._-: ")
 
     game = gameboard(input_string)
     print('high score 2048 is: ' + str(game.high_score))
