@@ -2,19 +2,7 @@ import random
 import pickle
 import re
 
-'''
-gameboard = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-]
 
-global high_score
-global score
-
-score = 0
-'''
 class gameboard():
 
     def __init__(self, player_name):
@@ -38,6 +26,7 @@ class gameboard():
         try:
             with open('highscorepickle.pkl', 'rb') as file:
                 h = pickle.load(file)
+                print(h)
                 try:
                     self.high_score = h[self.player]
                 except KeyError:
