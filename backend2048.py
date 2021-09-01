@@ -1,5 +1,6 @@
 import random
 import pickle
+import re
 
 '''
 gameboard = [
@@ -34,21 +35,21 @@ class gameboard():
 
     def load_high_score(self):
 
-        with open('highscorepickle.pkl', 'rb') as file:
-            h = pickle.load(file)
-            try:
-                self.high_score = h[self.player]
-            except:
+        try:
+            with open('highscorepickle.pkl', 'rb') as file:
+                h = pickle.load(file)
+                try:
+                    self.high_score = h[self.player]
+                except KeyError:
+                    h[self.player] = 0
+
+        except FileNotFoundError:
+            self.high_score = 0
+            with open('highscorepickle.pkl', 'wb') as file:
+                h = {}
                 h[self.player] = 0
-            
-            return
-        
-        self.high_score = 0
-        with open('highscorepickle.pkl', 'wb') as file:
-            h = {}
-            h[self.player] = 0
-            pickle.dump(h, file)
-            
+                pickle.dump(h, file)
+
     def pick_random_tile(self):
 
         valid = []
@@ -73,160 +74,122 @@ class gameboard():
             print(i)
         print()
 
-
-    
-
-'''
-try:
-    high_score_pickle = open('highscorepickle.pkl', 'rb')
-    h = pickle.load(high_score_pickle)
-    high_score = h['score']
-    high_score_pickle.close()
-except FileNotFoundError:
-    high_score = 0
-    h = {}
-    h['score'] = high_score
-    high_score_pickle = open('highscorepickle.pkl', 'wb')
-    pickle.dump(h, high_score_pickle)
-    high_score_pickle.close()
-'''
-
-def print_gameboard():
-    for i in gameboard:
-        print(i)
-    print()
+    def transpose(self):
+        interim_board = [[self.gameboard[j][i] for j in range(4)] for i in range(4)]
+        self.gameboard = interim_board
 
 
-def pick_random_tile():
-
-    valid = []
-    for j in range(4):
-        for i in range(4):
-            if gameboard[j][i] == 0:
-                valid.append((j, i))
-
-    try:
-        pos = random.choice(valid)
-        n = random.random()
-        if n >= 0.7:  # difficulty selector
-            gameboard[pos[0]][pos[1]] = 4
-        else:
-            gameboard[pos[0]][pos[1]] = 2
-
-    except:
-        print('try another move')
-
+    def reverse(self):
+        interim_board = [row[::-1] for row in self.gameboard]
+        self.gameboard = interim_board
     
 
 
-def transpose(board):
-    interim_board = [[board[j][i] for j in range(4)] for i in range(4)]
-    return interim_board
+
+    def slam_left(self):
+        for j in range(4):
+            for _ in range(3):
+                for i in range(3):
+                    if self.gameboard[j][i] == 0:
+                        self.gameboard[j][i] = self.gameboard[j][i + 1]
+                        self.gameboard[j][i + 1] = 0
 
 
-def reverse(board):
-    interim_board = [row[::-1] for row in board]
-    return interim_board
+    def compress_left(self):
 
-
-def slam_left():
-    for j in range(4):
-        for _ in range(3):
+        for j in range(4):
             for i in range(3):
-                if gameboard[j][i] == 0:
-                    gameboard[j][i] = gameboard[j][i + 1]
-                    gameboard[j][i + 1] = 0
+                if self.gameboard[j][i] != 0 and self.gameboard[j][i] == self.gameboard[j][i + 1]:
+                    self.gameboard[j][i] = self.gameboard[j][i] * 2
+                    self.score = self.score + self.gameboard[j][i]
+                    #print('score: ' + str(score))
+                    if self.score > self.high_score:
+                        self.high_score = self.score
+                        
+                        h = {}
+                        with open('highscorepickle.pkl', 'rb') as file:
+                            h = pickle.load(file)
+                            #print(h)
+                            
+                        h[self.player] = self.high_score
+
+                        with open('highscorepickle.pkl', 'wb') as file:
+                            #h = pickle.load(file)
+                            print(h)
+                            
+                            pickle.dump(h, file)
+
+                    self.gameboard[j][i + 1] = 0
+
+    def move_left(self):
+
+        self.slam_left()
+        self.compress_left()
+        self.slam_left()
 
 
-def compress_left():
+    def move_up(self):
 
-    for j in range(4):
-        for i in range(3):
-            if gameboard[j][i] != 0 and gameboard[j][i] == gameboard[j][i + 1]:
-                gameboard[j][i] = gameboard[j][i] * 2
-                global score
-                global high_score
-                score = score + gameboard[j][i]
-                #print('score: ' + str(score))
-                if score > high_score:
-                    high_score = score
-                    h = {}
-                    h['score'] = high_score
-                    high_score_pickle = open('highscorepickle.pkl', 'wb')
-                    pickle.dump(h, high_score_pickle)
-                    #print(high_score)
-                    high_score_pickle.close()
-
-                gameboard[j][i + 1] = 0
-
-def move_left():
-
-    slam_left()
-    compress_left()
-    slam_left()
+        self.transpose()
+        self.move_left()
+        self.transpose()
 
 
-def move_up():
+    def move_down(self):
 
-    global gameboard
-    gameboard = transpose(gameboard)
-    move_left()
-    gameboard = transpose(gameboard)
-
-
-def move_down():
-
-    global gameboard
-    gameboard = transpose(gameboard)
-    gameboard = reverse(gameboard)
-    move_left()
-    gameboard = reverse(gameboard)
-    gameboard = transpose(gameboard)
+        self.transpose()
+        self.reverse()
+        self.move_left()
+        self.reverse()
+        self.transpose()
 
 
-def move_right():
+    def move_right(self):
 
-    global gameboard
-    gameboard = reverse(gameboard)
-    move_left()
-    gameboard = reverse(gameboard)
+        self.reverse()
+        self.move_left()
+        self.reverse()
 
-def is_game_over():
+    def is_game_over(self):
 
-    #print_gameboard()
-    for i in gameboard:
-        if 2048 in i:
-            return True
+        #print_gameboard()
+        for i in self.gameboard:
+            if 2048 in i:
+                return True
+
+        return False
+
+    def game_loop(self):
+
+        while not self.is_game_over():
+            char = input().rstrip()[0]
+
+            if char == 'w':
+                self.move_up()
+            elif char == 's':
+                self.move_down()
+            elif char == 'd':
+                self.move_right()
+            elif char == 'a':
+                self.move_left()
+
+            self.pick_random_tile()
+            self.print_gameboard()
     
-    return False
-
-def init_gameboard():
-    pick_random_tile()
-    pick_random_tile()
-    print_gameboard()
-
+def input_validation(input_string):
+    if re.match("^[a-zA-Z0-9_.-]+$", input_string):
+        return input_string
+    return True
 
 
 
 if __name__ == "__main__":
+    input_string = input("enter username: ")
+    while input_validation(input_string) is True:
+        input_string = input("enter only alphanumeric: ")
 
-    print('high score 2048 is: ' + str(high_score))
-    init_gameboard()
+    game = gameboard(input_string)
+    print('high score 2048 is: ' + str(game.high_score))
 
-    while not is_game_over():
-        char = input().rstrip()[0]
-
-        if char == 'w':
-            move_up()
-        elif char == 's':
-            move_down()
-        elif char == 'd':
-            move_right()
-        elif char == 'a':
-            move_left()
-
-        pick_random_tile()
-        print_gameboard()
-
-
+    game.game_loop()
 
