@@ -5,10 +5,8 @@
 [![Pytest](https://github.com/technocrat13/oops2048/actions/workflows/Pytest.yml/badge.svg)](https://github.com/technocrat13/oops2048/actions/workflows/Pytest.yml)
 
 
-# TESTPLAN MD FILE HERE
 
-
-## Table no 1: High level test plan
+## High level test plan
 
 | **Test ID** | **Description**                                              | **Exp I/P** | **Exp O/P** | **Actual Out** |**Type Of Test** |
 |-------------|--------------------------------------------------------------|------------|-------------|----------------|------------------|
@@ -18,7 +16,7 @@
 |  HL_04      |**2048 Move Down**: Test to verify if all functions are performed correctly on a down move |gameboard |gameboard with down movement| gameboard with down movement|movement |
 
 
-## Table no 2: Low level test plan
+## Low level test plan
 
 | **Test ID** | **Description**                                              | **Exp IN** | **Exp OUT** | **Actual Out** |**Type Of Test**  |    
 |-------------|--------------------------------------------------------------|------------|-------------|----------------|------------------|
