@@ -1,6 +1,7 @@
 import random
 import pickle
 
+'''
 gameboard = [
     [0, 0, 0, 0],
     [0, 0, 0, 0],
@@ -12,9 +13,70 @@ global high_score
 global score
 
 score = 0
+'''
+class gameboard():
+
+    def __init__(self, player_name):
+        self.gameboard = [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+            ]
+
+        self.score = 0
+        self.player = player_name
+        self.high_score = 0
+        self.load_high_score()
+        self.pick_random_tile()
+        self.pick_random_tile()
 
 
+    def load_high_score(self):
 
+        with open('highscorepickle.pkl', 'rb') as file:
+            h = pickle.load(file)
+            try:
+                self.high_score = h[self.player]
+            except:
+                h[self.player] = 0
+            
+            return
+        
+        self.high_score = 0
+        with open('highscorepickle.pkl', 'wb') as file:
+            h = {}
+            h[self.player] = 0
+            pickle.dump(h, file)
+            
+    def pick_random_tile(self):
+
+        valid = []
+        for j in range(4):
+            for i in range(4):
+                if self.gameboard[j][i] == 0:
+                    valid.append((j, i))
+
+        try:
+            pos = random.choice(valid)
+            n = random.random()
+            if n >= 0.7:  # difficulty selector
+                self.gameboard[pos[0]][pos[1]] = 4
+            else:
+                self.gameboard[pos[0]][pos[1]] = 2
+
+        except:
+            print('try another move')
+    
+    def print_gameboard(self):
+        for i in self.gameboard:
+            print(i)
+        print()
+
+
+    
+
+'''
 try:
     high_score_pickle = open('highscorepickle.pkl', 'rb')
     h = pickle.load(high_score_pickle)
@@ -27,7 +89,7 @@ except FileNotFoundError:
     high_score_pickle = open('highscorepickle.pkl', 'wb')
     pickle.dump(h, high_score_pickle)
     high_score_pickle.close()
-
+'''
 
 def print_gameboard():
     for i in gameboard:
