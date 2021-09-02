@@ -3,7 +3,7 @@
 import backend2048
 
 game2048 = backend2048.Gameboard('test')
-
+#print(game2048.__module__)
 
 def test_slam_left():
     '''testing slam left'''
@@ -13,7 +13,7 @@ def test_slam_left():
                           [4, 0, 0, 0],
                           [0, 0, 2, 4]]
 
-    game2048.slam_left()
+    game2048._Gameboard__slam_left()
 
     assert game2048.gameboard == [[2, 2, 0, 0],
                                   [8, 0, 0, 0],
@@ -28,7 +28,7 @@ def test_compress_left():
                           [4, 0, 0, 0],
                           [0, 0, 2, 2]]
 
-    game2048.compress_left()
+    game2048._Gameboard__compress_left()
 
     assert game2048.gameboard == [[2, 0, 2, 0],
                                   [0, 0, 0, 8],
@@ -43,7 +43,7 @@ def test_transpose():
                           [0, 0, 0, 8],
                           [4, 0, 0, 0],
                           [0, 0, 2, 4]]
-    game2048.transpose()
+    game2048._Gameboard__transpose()
     assert game2048.gameboard == [[2, 0, 4, 0],
                                   [0, 0, 0, 0],
                                   [2, 0, 0, 2],
@@ -57,12 +57,27 @@ def test_reverse():
                           [4, 0, 0, 0],
                           [0, 0, 2, 4]]
 
-    game2048.reverse()
+    game2048._Gameboard__reverse()
 
     assert game2048.gameboard == [[0, 2, 0, 2],
                                   [8, 0, 0, 0],
                                   [0, 0, 0, 4],
                                   [4, 2, 0, 0]]
+
+
+def test_raw_move_left():
+    '''testing move left'''
+    game2048.gameboard = [[2, 0, 2, 0],
+                          [0, 0, 0, 8],
+                          [4, 0, 0, 0],
+                          [0, 0, 2, 2]]
+
+    game2048._Gameboard__raw_move_left()
+
+    assert game2048.gameboard == [[4, 0, 0, 0],
+                                  [8, 0, 0, 0],
+                                  [4, 0, 0, 0],
+                                  [4, 0, 0, 0]]
 
 def test_move_left():
     '''testing move left'''

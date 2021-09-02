@@ -20,12 +20,11 @@ class Gameboard():
         self.score = 0
         self.player = player_name
         self.high_score = 0
-        self.load_high_score()
+        self.__load_high_score()
         self.pick_random_tile()
         self.pick_random_tile()
 
-
-    def load_high_score(self):
+    def __load_high_score(self):
         '''uses a picklefile to maintain all scores'''
 
         try:
@@ -69,19 +68,19 @@ class Gameboard():
             print(i)
         print('                                                   score: ', self.score)
 
-    def transpose(self):
+    def __transpose(self):
         '''transpose of a 2d matix'''
         interim_board = [[self.gameboard[j][i] for j in range(4)] for i in range(4)]
         self.gameboard = interim_board
 
 
-    def reverse(self):
+    def __reverse(self):
         '''reverse of a 2d matix'''
         interim_board = [row[::-1] for row in self.gameboard]
         self.gameboard = interim_board
 
 
-    def slam_left(self):
+    def __slam_left(self):
         '''moving all elements to the left'''
         for j in range(4):
             for _ in range(3):
@@ -91,7 +90,7 @@ class Gameboard():
                         self.gameboard[j][i + 1] = 0
 
 
-    def compress_left(self):
+    def __compress_left(self):
         '''joining all elements to the left'''
         for j in range(4):
             for i in range(3):
@@ -117,38 +116,42 @@ class Gameboard():
 
                     self.gameboard[j][i + 1] = 0
 
+    def __raw_move_left(self):
+        '''basic left move'''
+        self.__slam_left()
+        self.__compress_left()
+        self.__slam_left()
+
     def move_left(self):
         '''left move'''
 
-        self.slam_left()
-        self.compress_left()
-        self.slam_left()
+        self.__raw_move_left()
 
 
     def move_up(self):
         '''up move'''
 
-        self.transpose()
-        self.move_left()
-        self.transpose()
+        self.__transpose()
+        self.__raw_move_left()
+        self.__transpose()
 
 
     def move_down(self):
         '''down move'''
 
-        self.transpose()
-        self.reverse()
-        self.move_left()
-        self.reverse()
-        self.transpose()
+        self.__transpose()
+        self.__reverse()
+        self.__raw_move_left()
+        self.__reverse()
+        self.__transpose()
 
 
     def move_right(self):
         '''right move'''
 
-        self.reverse()
-        self.move_left()
-        self.reverse()
+        self.__reverse()
+        self.__raw_move_left()
+        self.__reverse()
 
     def is_game_over(self):
         '''check if 2048 has been made or not'''
