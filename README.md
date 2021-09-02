@@ -5,6 +5,15 @@
 [![Pytest](https://github.com/technocrat13/oops2048/actions/workflows/Pytest.yml/badge.svg)](https://github.com/technocrat13/oops2048/actions/workflows/Pytest.yml)
 
 
+## Usage
+	
+* To play a game of 2048 in your console:
+
+	```bash
+	python backend2048.py
+	```
+
+
 
 ## High level test plan
 
