@@ -66,7 +66,7 @@ def test_reverse():
 
 
 def test_raw_move_left():
-    '''testing move left'''
+    '''testing raw move left'''
     game2048.gameboard = [[2, 0, 2, 0],
                           [0, 0, 0, 8],
                           [4, 0, 0, 0],

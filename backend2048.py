@@ -24,6 +24,14 @@ class Gameboard():
         self.pick_random_tile()
         self.pick_random_tile()
 
+    def __str__(self):
+        '''overloaded print gameboard along side the score'''
+        output = ''
+        for i in self.gameboard:
+            output = output + str(i) + '\n'
+        #print('                                                   score: ', self.score)
+        return output
+
     def __load_high_score(self):
         '''uses a picklefile to maintain all scores'''
 
@@ -167,7 +175,7 @@ class Gameboard():
     def game_loop(self):
         '''game loop to run in console'''
 
-        self.print_gameboard()
+        #self.print_gameboard()
         while not self.is_game_over():
             char = input('[wasd]: ').rstrip()
 
@@ -201,6 +209,7 @@ if __name__ == "__main__":
         input_string = input("enter only alphanumeric and ._-: ")
 
     game = Gameboard(input_string)
-    print('high score 2048 is: ' + str(game.high_score))
+    print('high score 2048 is: ', game.high_score)
+    print(game)
 
     game.game_loop()
