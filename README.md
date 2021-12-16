@@ -36,3 +36,4 @@
 |  LL_05   |**2048 scoring**: Test to add tile values to score if the tile merges |gameboard |score |score |score tracker |
 |  LL_06   |**2048 game over detection**: Test to check if there is 2048 in the gameboard|gameboard |True/False |True/False |game over |
 
+
